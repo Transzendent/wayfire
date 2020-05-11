@@ -1,5 +1,6 @@
 #pragma once
 
+#include <wayfire/object.hpp>
 #include <wayfire/output.hpp>
 #include <wayfire/geometry.hpp>
 #include <wayfire/render-manager.hpp>
@@ -14,7 +15,7 @@ namespace wf
 /**
  * A helper class to render workspaces arranged in a grid.
  */
-class workspace_wall_t
+class workspace_wall_t : public wf::signal_provider_t
 {
   public:
     /**
@@ -37,6 +38,14 @@ class workspace_wall_t
     ~workspace_wall_t()
     {
         stop_output_renderer();
+
+        OpenGL::render_begin();
+        for (auto& row : this->streams)
+        {
+            for (auto& stream : row)
+                stream.buffer.release();
+        }
+        OpenGL::render_end();
     }
 
     /**
@@ -119,6 +128,7 @@ class workspace_wall_t
         }
 
         OpenGL::render_end();
+        this->emit_signal("frame", nullptr);
     }
 
     /**
