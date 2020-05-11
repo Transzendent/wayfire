@@ -83,6 +83,8 @@ variant_t view_access_interface_t::get(const std::string &identifier, bool &erro
         out = _view->tiled_edges == TILED_EDGES_ALL;
     } else if (identifier == "floating") {
         out = _view->tiled_edges == 0;
+    } else if (identifier == "focuseable") {
+        out = _view->is_focuseable();
     }
     else if (identifier == "type")
     {
